@@ -22,6 +22,7 @@ interface PageLayoutProps {
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
+  metaObjects?: any;
 }
 
 export function PageLayout({
@@ -29,6 +30,7 @@ export function PageLayout({
   children = null,
   footer,
   header,
+  metaObjects,
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
@@ -37,6 +39,13 @@ export function PageLayout({
       <CartAside cart={cart} />
       <SearchAside />
       <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+      <div className="bg-amber-700 text-center py-2 text-white">
+        {
+          metaObjects?.metaobjects?.edges
+            ?.map((item: any) => item?.node?.fields)
+            ?.flat()?.[0]?.value
+        }
+      </div>
       {header && (
         <Header
           header={header}

@@ -16,7 +16,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from '~/components/PageLayout';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import {FOOTER_QUERY, HEADER_QUERY, META_BANNER_QUERY} from '~/lib/fragments';
 
 export type RootLoader = typeof loader;
 
@@ -101,17 +101,19 @@ export async function loader(args: LoaderFunctionArgs) {
 async function loadCriticalData({context}: LoaderFunctionArgs) {
   const {storefront} = context;
 
-  const [header] = await Promise.all([
+  const [header, metaObjects] = await Promise.all([
     storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
       },
     }),
+    storefront.query(META_BANNER_QUERY, {
+      variables: {type: 'banner'},
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return {header, metaObjects};
 }
 
 /**
@@ -125,7 +127,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   // defer the footer query (below the fold)
   const footer = storefront
     .query(FOOTER_QUERY, {
-      cache: storefront.CacheLong(),
       variables: {
         footerMenuHandle: 'footer', // Adjust to your footer menu handle
       },

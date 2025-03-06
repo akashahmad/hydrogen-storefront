@@ -231,3 +231,26 @@ export const FOOTER_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 ` as const;
+
+export const META_BANNER_QUERY = `#graphql
+  fragment MetaBanner on Metaobject {
+    id
+    type
+    handle
+    fields {
+      key
+      value
+      type
+    }
+  }
+
+  query MetaBanners($type: String!, $first: Int = 50) {
+    metaobjects(type: $type, first: $first) {
+      edges {
+        node {
+          ...MetaBanner
+        }
+      }
+    }
+  }
+` as const;
